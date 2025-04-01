@@ -2,3 +2,6 @@
 .vscode/
 LICENCE
 *.md
+
+### Environment Variables ###
+.env

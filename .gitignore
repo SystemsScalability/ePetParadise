@@ -49,3 +49,6 @@ api/obj/
 
 api-test/bin/
 api-test/obj/
+
+### Environment Variables ###
+.env
