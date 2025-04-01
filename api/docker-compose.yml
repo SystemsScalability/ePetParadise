@@ -1,38 +1,32 @@
-version: "3.8"
-
 services:
   postgres:
     image: postgres:16.0
     container_name: pet_paradise_postgres
-    restart: always
     environment:
-      POSTGRES_DB: pet_paradise_db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${DEV_POSTGRES_DB}
+      POSTGRES_USER: ${DEV_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DEV_POSTGRES_PASSWORD}
       TZ: "UTC-4"
     ports:
       - 3030:3030
     command: -p 3030
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ./scripts/init.pgsql:/docker-entrypoint-initdb.d/1.sql
-      - ./scripts/triggers.pgsql:/docker-entrypoint-initdb.d/2.sql
+    profiles:
+      - dev
+    env_file:
+      - .env
 
   pgadmin:
     image: dpage/pgadmin4:7.8
     container_name: pet_paradise_pgadmin
-    restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_LISTEN_PORT: 4040
+      PGADMIN_DEFAULT_EMAIL: ${DEV_PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DEV_PGADMIN_PASSWORD}
+      PGADMIN_LISTEN_PORT: ${DEV_PGADMIN_PORT}
     ports:
       - 4040:4040
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
     depends_on:
       - postgres
-
-volumes:
-  pgadmin-data:
-  postgres-data:
+    profiles:
+      - dev
+    env_file:
+      - .env

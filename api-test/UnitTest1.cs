@@ -1,9 +1,8 @@
-namespace api_test;
+using System.ComponentModel.DataAnnotations;
 
-public class UnitTest1
+namespace UnitTests
 {
-    [Fact]
-    public void Test1()
+    public class UnitTests
     {
 
     }
