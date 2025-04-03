@@ -138,7 +138,7 @@ Muestra el estado del autoscaler, incluyendo la carga actual de CPU y el número
 ```sh
 NAME          REFERENCE              TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 api-hpa       Deployment/api-deployment   40%/50%   2         10       3          1m
-
+```
 ## Comprobacion
 
 ## Pruebas de Carga con `wrk`
