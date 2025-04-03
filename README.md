@@ -18,14 +18,21 @@ dotnet build
 Later, you should have the database up with Docker. So run this command
 
 ```
-docker compose up
+docker compose -f docker-compose.yml up pgadmin
+```
+
+After that, you also have the migrations done.
+
+```
+dotnet ef database update --project api
 ```
 
 Finally, you just run the following command to see the endpoints in Swagger.
 
 ```
-dotnet run
+dotnet run --project api
 ```
+
 # Aplicacion de kubernetes 
 ## ¿Que es Kubernetes?
 Kubernetes (K8s) es un sistema de orquestación de contenedores que permite automatizar la implementación, administración y escalabilidad de aplicaciones en contenedores. Funciona como un administrador de infraestructura que gestiona la disponibilidad, el balanceo de carga y la distribución de recursos de forma eficiente.
@@ -131,7 +138,7 @@ Muestra el estado del autoscaler, incluyendo la carga actual de CPU y el número
 ```sh
 NAME          REFERENCE              TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 api-hpa       Deployment/api-deployment   40%/50%   2         10       3          1m
-```
+
 ## Comprobacion
 
 ## Pruebas de Carga con `wrk`
