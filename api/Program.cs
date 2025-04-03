@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,11 +72,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
             ValidateIssuer = false,
             ValidateAudience = false,
-            ValidIssuer = builder.Configuration["JWT:Issuer"],
-            ValidAudience = builder.Configuration["JWT:Audience"]
+            // ValidIssuer = builder.Configuration["JWT:Issuer"],
+            // ValidAudience = builder.Configuration["JWT:Audience"]
         };
     });
 
@@ -90,6 +92,10 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.UseMetricServer(url: "/metrics");
+app.UseHttpMetrics();
+app.MapMetrics();
 
 app.UseSwagger();
 app.UseSwaggerUI();

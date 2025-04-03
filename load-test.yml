@@ -1,0 +1,16 @@
+config:
+  target: "http://localhost:5155"
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      name: "Warm-up phase"
+
+scenarios:
+  - name: "Load Test"
+    flow:    
+      - post:
+          url: "/api/region"
+          json:
+            model: "Sucre"
+            municipalTax: 40.21
+            statalTax: 20.21
