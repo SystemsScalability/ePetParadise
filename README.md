@@ -132,3 +132,61 @@ Muestra el estado del autoscaler, incluyendo la carga actual de CPU y el número
 NAME          REFERENCE              TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 api-hpa       Deployment/api-deployment   40%/50%   2         10       3          1m
 ```
+## Comprobacion
+
+## Pruebas de Carga con `wrk`
+
+### instalacion de la herramienta:
+
+```sh
+sudo apt update && sudo apt install wrk -y
+```
+
+### Monitoreo de las estadisticas
+
+```sh
+docker stats
+```
+
+### Simular el trafico 
+```sh
+wrk -t4 -c50 -d30s http://localhost:5155
+```
+
+## Pruebas ejecutadas
+
+### Sin Kubernetes
+
+![Pruebas de Carga sin kubernetes](assets/Con.png)
+
+### Con Kubernetes
+![Pruebas de Carga con kubernetes](assets/Sin.png)
+
+
+Se realizaron pruebas de carga con `wrk` para evaluar el rendimiento de la aplicación **sin Kubernetes** y **con Kubernetes**. A continuación, se muestra una comparación de los resultados:
+
+### 📊 Comparación de Rendimiento
+
+| Métrica                | 🚨 **Sin Kubernetes** | 🚀 **Con Kubernetes** | 🔥 Diferencia |
+|------------------------|----------------------|----------------------|--------------|
+| **Latencia Promedio**  | 1.03ms | 551.17µs (0.55ms) | 🔽 -0.48ms (87% menos) |
+| **Latencia Máxima**    | 172.46ms | 25.40ms | 🔽 -147.06ms (mucho menor) |
+| **Solicitudes por segundo (Avg Req/Sec)** | 19.93k | 21.29k | 🔼 +1.36k (6.4% más) |
+| **Máx Req/Sec** | 26.87k | 25.24k | 🔽 -1.63k (ligera reducción) |
+| **Total de requests en 30s** | 2,374,072 | 2,542,021 | 🔼 +167,949 (más requests con Kubernetes) |
+| **Non-2xx o 3xx responses** | 🚨 2,374,072 (todas fallaron) | ✅ 0 (todas correctas) | 🔽 Sin errores con Kubernetes |
+| **Requests/sec** | 79,068.06 | 84,708.04 | 🔼 +5,639.98 (más requests por segundo) |
+| **Transfer/sec** | 7.47MB | 8.00MB | 🔼 +0.53MB (más datos transferidos) |
+
+### **Conclusión**
+**Con Kubernetes, el rendimiento mejora significativamente:**
+- Menor latencia (**0.55ms vs. 1.03ms**).
+- Más solicitudes procesadas correctamente (**+167,949 en 30s**).
+- **Cero errores** (vs. **2.37M respuestas fallidas sin Kubernetes**).
+- Mayor estabilidad en la latencia máxima (**25ms vs. 172ms**).
+
+ **Sin Kubernetes, el servidor colapsó bajo carga:**
+- **Todas las respuestas fueron errores**, indicando que el servidor no pudo manejar la carga.
+- **Latencia mucho mayor y menos estabilidad**.
+
+ **Conclusión final**: Kubernetes mejora la estabilidad, el rendimiento y la escalabilidad de la aplicación. 
